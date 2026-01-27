@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  b<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reproductor con Carátulas</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #111;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    #reproductor {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 320px;
+      background: #222;
+      color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.6);
+      overflow: hidden;
+    }
+
+    .cancion {
+      display: none;
+      text-align: center;
+      padding: 15px;
+    }
+
+    .cancion.active {
+      display: block;
+    }
+
+    .caratula {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .titulo {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    audio {
+      width: 100%;
+    }
+
+    .controles {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      background: #333;
+    }
+
+    .btn {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      color: #0ff;
+    }
+  </style>
+</head>
+<body>
+
+<div id="reproductor">
+  <div class="cancion active">
+    <img src="castle.jpg" class="caratula" alt="Castle on the Hill">
+    <div class="titulo">Castle on the Hill - Ed Sheeran</div>
+    <audio controls src="assets/0.mp3"></audio>
+  </div>
+
+  <div class="cancion">
+    <img src="notears.jpg" class="caratula" alt="No Tears Left to Cry">
+    <div class="titulo">No Tears Left to Cry - Ariana Grande</div>
+    <audio controls src="assets/1.mp3"></audio>
+  </div>
+
+  <div class="cancion">
+    <img src="lucid.jpg" class="caratula" alt="Lucid Dreams">
+    <div class="titulo">Lucid Dreams - Juice WRLD</div>
+    <audio controls src="assets/2.mp3"></audio>
+  </div>
+
+  <div class="cancion">
+    <img src="titanium.jpg" class="caratula" alt="Titanium">
+    <div class="titulo">Titanium - David Guetta</div>
+    <audio controls src="assets/3.mp3"></audio>
+  </div>
+
+  <div class="controles">
+    <button class="btn" onclick="cambiarCancion(-1)">⏮️</button>
+    <button class="btn" onclick="cambiarCancion(1)">⏭️</button>
+  </div>
+</div>
+
+<script>
+  let indice = 0;
+  const canciones = document.querySelectorAll('.cancion');
+
+  function cambiarCancion(direccion) {
+    canciones[indice].classList.remove('active');
+    indice = (indice + direccion + canciones.length) % canciones.length;
+    canciones[indice].classList.add('active');
+  }
+</script>
+
+</body>
+</html>
+    
+  </body>
+  
+</html>
