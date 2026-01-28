@@ -2,12 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Mini Reproductor Neon</title>
+  <title>Reproductor Neon Custom</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background: url('fondo.jpg') center/cover no-repeat;
+      background: #111 url('fondo.jpg') center/cover no-repeat;
       font-family: 'Segoe UI', sans-serif;
     }
 
@@ -16,24 +16,13 @@
       bottom: 20px;
       right: 20px;
       width: 320px;
-      background: url('https://i.ibb.co/KcWWf1Hg/descargar.png') center/cover no-repeat; 
-      border-radius: 25px;
-      box-shadow: 0 0 20px #0ff;
+      background: rgba(20,20,20,0.9);
+      border-radius: 20px;
+      box-shadow: 0 0 20px #0ff, 0 0 40px #f0f;
       overflow: hidden;
       transition: transform 0.5s ease;
       z-index: 999;
-      display: flex;
-      align-items: center;
       padding: 15px;
-    }
-
-    #reproductor.flotando {
-      animation: flotar 2s ease-in-out infinite;
-    }
-
-    @keyframes flotar {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
     }
 
     .vinilo {
@@ -42,7 +31,6 @@
       border-radius: 50%;
       background: url('https://i.ibb.co/60TqKYsx/37e2e608d3abf00ffa126b0a1c327e5a.jpg') center/cover no-repeat;
       margin-right: 15px;
-      position: relative;
       cursor: pointer;
       flex-shrink: 0;
     }
@@ -68,10 +56,10 @@
     }
 
     .neon-grande {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: bold;
       color: #fff;
-      text-shadow: 0 0 10px #f0f, 0 0 20px #f0f;
+      text-shadow: 0 0 10px #f0f, 0 0 20px #0ff;
       animation: parpadeo 2s infinite;
     }
 
@@ -99,28 +87,95 @@
       color: #fff;
     }
 
-    audio {
-      display: none;
+    audio { display: none; }
+
+    /* Lista desplegable */
+    #lista {
+      margin-top: 15px;
+      background: rgba(0,0,0,0.8);
+      border-radius: 12px;
+      box-shadow: 0 0 15px #0ff;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease;
+    }
+
+    #lista.mostrar {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    #lista ul {
+      list-style: none;
+      margin: 0;
+      padding: 10px;
+    }
+
+    #lista li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+      color: #fff;
+      text-shadow: 0 0 5px #0ff;
+    }
+
+    #lista li img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+
+    #lista li:hover {
+      background: rgba(255,255,255,0.1);
+      transform: scale(1.05);
+      color: #f0f;
     }
   </style>
 </head>
 <body>
 
 <div id="reproductor">
-  <!-- Vinilo único -->
-  <div class="vinilo" onclick="togglePlay(this)"></div>
-
-  <div class="info">
-    <div class="neon-pequeno" id="artista">Ed Sheeran</div>
-    <div class="neon-grande" id="titulo">Castle on the Hill</div>
-    <div class="controles">
-      <button class="btn" onclick="cambiarCancion(-1)">⏮️</button>
-      <button class="btn" onclick="togglePlay(document.querySelector('.vinilo'))">⏯️</button>
-      <button class="btn" onclick="cambiarCancion(1)">⏭️</button>
+  <div style="display:flex;align-items:center;">
+    <div class="vinilo" onclick="togglePlay()"></div>
+    <div class="info">
+      <div class="neon-pequeno" id="artista">Ed Sheeran</div>
+      <div class="neon-grande" id="titulo">Castle on the Hill</div>
+      <div class="controles">
+        <button class="btn" onclick="cambiarCancion(-1)">⏮️</button>
+        <button class="btn" onclick="togglePlay()">⏯️</button>
+        <button class="btn" onclick="cambiarCancion(1)">⏭️</button>
+        <button class="btn" onclick="toggleLista()">📂</button>
+      </div>
     </div>
   </div>
 
-  <!-- Canciones (solo audio, con datos de título/artista en JS) -->
+  <!-- Lista -->
+  <div id="lista">
+    <ul>
+      <li onclick="cambiarCancionDirecto(0)">
+        <img src="https://i.ibb.co/SxZSPPB/R.jpg">
+        <span>Ed Sheeran - Castle on the Hill</span>
+      </li>
+      <li onclick="cambiarCancionDirecto(1)">
+        <img src="https://i.ibb.co/Ksjdc8h/b763f1e52bdd7633c278718e41a27627.jpg">
+        <span>Ariana Grande - No Tears Left to Cry</span>
+      </li>
+      <li onclick="cambiarCancionDirecto(2)">
+        <img src="https://i.ibb.co/mJf3jCg/R-2.jpg">
+        <span>Juice WRLD - Lucid Dreams</span>
+      </li>
+      <li onclick="cambiarCancionDirecto(3)">
+        <img src="https://i.ibb.co/60TqKYsx/37e2e608d3abf00ffa126b0a1c327e5a.jpg">
+        <span>David Guetta - Titanium</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Canciones -->
   <audio src="assets/0.mp3" class="cancion active"></audio>
   <audio src="assets/2.aac" class="cancion"></audio>
   <audio src="assets/0.aac" class="cancion"></audio>
@@ -130,12 +185,11 @@
 <script>
   let indice = 0;
   const canciones = document.querySelectorAll('audio');
-  const reproductor = document.getElementById('reproductor');
   const vinilo = document.querySelector('.vinilo');
   const titulo = document.getElementById('titulo');
   const artista = document.getElementById('artista');
+  const lista = document.getElementById('lista');
 
-  // Lista de títulos y artistas
   const infoCanciones = [
     {titulo: "Castle on the Hill", artista: "Ed Sheeran"},
     {titulo: "No Tears Left to Cry", artista: "Ariana Grande"},
@@ -150,30 +204,37 @@
 
     indice = (indice + direccion + canciones.length) % canciones.length;
 
-    // Actualizar texto neón
     titulo.textContent = infoCanciones[indice].titulo;
     artista.textContent = infoCanciones[indice].artista;
+    canciones[indice].play();
+    vinilo.classList.add('playing');
+  }
+
+  function cambiarCancionDirecto(i) {
+    canciones[indice].pause();
+    canciones[indice].currentTime = 0;
+    vinilo.classList.remove('playing');
+
+    indice = i;
+    titulo.textContent = infoCanciones[indice].titulo;
+    artista.textContent = infoCanciones[indice].artista;
+    canciones[indice].play();
+    vinilo.classList.add('playing');
   }
 
   function togglePlay() {
     const audio = canciones[indice];
-
-    canciones.forEach(a => {
-      if (a !== audio) {
-        a.pause();
-        a.currentTime = 0;
-      }
-    });
-
     if (audio.paused) {
       audio.play();
       vinilo.classList.add('playing');
-      reproductor.classList.add('flotando');
     } else {
       audio.pause();
       vinilo.classList.remove('playing');
-      reproductor.classList.remove('flotando');
     }
+  }
+
+  function toggleLista() {
+    lista.classList.toggle('mostrar');
   }
 </script>
 
