@@ -16,9 +16,7 @@
       bottom: 20px;
       right: 20px;
       width: 320px;
-      /* Aquí cambias el fondo del rectángulo */
       background: url('fondo-reproductor.jpg') center/cover no-repeat; 
-      /* O si prefieres un color sólido: background: rgba(20,20,20,0.85); */
       border-radius: 25px;
       box-shadow: 0 0 20px #0ff;
       overflow: hidden;
@@ -70,7 +68,7 @@
     }
 
     .neon-grande {
-      font-size: 26px;
+      font-size: 22px;
       font-weight: bold;
       color: #fff;
       text-shadow: 0 0 10px #f0f, 0 0 20px #f0f;
@@ -113,8 +111,8 @@
   <div class="vinilo" onclick="togglePlay(this)"></div>
 
   <div class="info">
-    <div class="neon-pequeno">creating</div>
-    <div class="neon-grande">MAGIC</div>
+    <div class="neon-pequeno" id="artista">Ed Sheeran</div>
+    <div class="neon-grande" id="titulo">Castle on the Hill</div>
     <div class="controles">
       <button class="btn" onclick="cambiarCancion(-1)">⏮️</button>
       <button class="btn" onclick="togglePlay(document.querySelector('.vinilo'))">⏯️</button>
@@ -122,7 +120,7 @@
     </div>
   </div>
 
-  <!-- Canciones (solo audio, sin vinilo repetido) -->
+  <!-- Canciones (solo audio, con datos de título/artista en JS) -->
   <audio src="assets/0.mp3" class="cancion active"></audio>
   <audio src="assets/2.aac" class="cancion"></audio>
   <audio src="assets/0.aac" class="cancion"></audio>
@@ -134,6 +132,16 @@
   const canciones = document.querySelectorAll('audio');
   const reproductor = document.getElementById('reproductor');
   const vinilo = document.querySelector('.vinilo');
+  const titulo = document.getElementById('titulo');
+  const artista = document.getElementById('artista');
+
+  // Lista de títulos y artistas
+  const infoCanciones = [
+    {titulo: "Castle on the Hill", artista: "Ed Sheeran"},
+    {titulo: "No Tears Left to Cry", artista: "Ariana Grande"},
+    {titulo: "Lucid Dreams", artista: "Juice WRLD"},
+    {titulo: "Titanium", artista: "David Guetta"}
+  ];
 
   function cambiarCancion(direccion) {
     canciones[indice].pause();
@@ -141,6 +149,10 @@
     vinilo.classList.remove('playing');
 
     indice = (indice + direccion + canciones.length) % canciones.length;
+
+    // Actualizar texto neón
+    titulo.textContent = infoCanciones[indice].titulo;
+    artista.textContent = infoCanciones[indice].artista;
   }
 
   function togglePlay() {
