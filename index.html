@@ -2,12 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Reproductor con Vinilo</title>
+  <title>Mini Reproductor Neon</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background: #111;
+      background: url('fondo.jpg') center/cover no-repeat;
       font-family: 'Segoe UI', sans-serif;
     }
 
@@ -16,52 +16,37 @@
       bottom: 20px;
       right: 20px;
       width: 320px;
-      background: #222;
-      color: #fff;
-      border-radius: 15px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.6);
+      /* Aquí cambias el fondo del rectángulo */
+      background: url('fondo-reproductor.jpg') center/cover no-repeat; 
+      /* O si prefieres un color sólido: background: rgba(20,20,20,0.85); */
+      border-radius: 25px;
+      box-shadow: 0 0 20px #0ff;
       overflow: hidden;
-    }
-
-    .cancion {
-      display: none;
-      text-align: center;
+      transition: transform 0.5s ease;
+      z-index: 999;
+      display: flex;
+      align-items: center;
       padding: 15px;
     }
 
-    .cancion.active {
-      display: block;
+    #reproductor.flotando {
+      animation: flotar 2s ease-in-out infinite;
     }
 
-    .caratula {
-      width: 100%;
-      border-radius: 10px;
-      margin-bottom: 10px;
+    @keyframes flotar {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
     }
 
-    .titulo {
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-
-    /* Botón vinilo */
     .vinilo {
-      width: 80px;
-      height: 80px;
+      width: 90px;
+      height: 90px;
       border-radius: 50%;
-      border: 5px solid #333;
-      background: url('vinilo.png') center/cover no-repeat; /* Imagen de vinilo */
-      margin: 10px auto;
+      background: url('https://i.ibb.co/60TqKYsx/37e2e608d3abf00ffa126b0a1c327e5a.jpg') center/cover no-repeat;
+      margin-right: 15px;
+      position: relative;
       cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-
-    .vinilo img {
-      width: 60%;
-      height: 60%;
-      border-radius: 50%;
-      object-fit: cover;
-      margin: 20%;
+      flex-shrink: 0;
     }
 
     .vinilo.playing {
@@ -73,111 +58,109 @@
       to { transform: rotate(360deg); }
     }
 
+    .info {
+      flex-grow: 1;
+      text-align: left;
+    }
+
+    .neon-pequeno {
+      font-size: 14px;
+      color: #0ff;
+      text-shadow: 0 0 5px #0ff;
+    }
+
+    .neon-grande {
+      font-size: 26px;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 0 10px #f0f, 0 0 20px #f0f;
+      animation: parpadeo 2s infinite;
+    }
+
+    @keyframes parpadeo {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
     .controles {
+      margin-top: 10px;
       display: flex;
-      justify-content: space-between;
-      padding: 10px;
-      background: #333;
+      gap: 15px;
     }
 
     .btn {
       background: none;
       border: none;
-      color: #fff;
-      font-size: 18px;
+      color: #0ff;
+      font-size: 20px;
       cursor: pointer;
+      text-shadow: 0 0 5px #0ff;
     }
 
     .btn:hover {
-      color: #0ff;
+      color: #fff;
     }
 
     audio {
-      display: none; /* Ocultamos los controles nativos */
+      display: none;
     }
   </style>
 </head>
 <body>
 
 <div id="reproductor">
-  <div class="cancion active">
-    <img src="castle.jpg" class="caratula" alt="Castle on the Hill">
-    <div class="titulo">Castle on the Hill - Ed Sheeran</div>
-    <div class="vinilo" onclick="togglePlay(this)">
-      <img src="castle.jpg" alt="Carátula">
+  <!-- Vinilo único -->
+  <div class="vinilo" onclick="togglePlay(this)"></div>
+
+  <div class="info">
+    <div class="neon-pequeno">creating</div>
+    <div class="neon-grande">MAGIC</div>
+    <div class="controles">
+      <button class="btn" onclick="cambiarCancion(-1)">⏮️</button>
+      <button class="btn" onclick="togglePlay(document.querySelector('.vinilo'))">⏯️</button>
+      <button class="btn" onclick="cambiarCancion(1)">⏭️</button>
     </div>
-    <audio src="assets/0.mp3"></audio>
   </div>
 
-  <div class="cancion">
-    <img src="notears.jpg" class="caratula" alt="No Tears Left to Cry">
-    <div class="titulo">No Tears Left to Cry - Ariana Grande</div>
-    <div class="vinilo" onclick="togglePlay(this)">
-      <img src="notears.jpg" alt="Carátula">
-    </div>
-    <audio src="assets/2.aac"></audio>
-  </div>
-
-  <div class="cancion">
-    <img src="lucid.jpg" class="caratula" alt="Lucid Dreams">
-    <div class="titulo">Lucid Dreams - Juice WRLD</div>
-    <div class="vinilo" onclick="togglePlay(this)">
-      <img src="lucid.jpg" alt="Carátula">
-    </div>
-    <audio src="assets/0.aac"></audio>
-  </div>
-
-  <div class="cancion">
-    <img src="titanium.jpg" class="caratula" alt="Titanium">
-    <div class="titulo">Titanium - David Guetta</div>
-    <div class="vinilo" onclick="togglePlay(this)">
-      <img src="titanium.jpg" alt="Carátula">
-    </div>
-    <audio src="assets/1.aac"></audio>
-  </div>
-
-  <div class="controles">
-    <button class="btn" onclick="cambiarCancion(-1)">⏮️</button>
-    <button class="btn" onclick="cambiarCancion(1)">⏭️</button>
-  </div>
+  <!-- Canciones (solo audio, sin vinilo repetido) -->
+  <audio src="assets/0.mp3" class="cancion active"></audio>
+  <audio src="assets/2.aac" class="cancion"></audio>
+  <audio src="assets/0.aac" class="cancion"></audio>
+  <audio src="assets/1.aac" class="cancion"></audio>
 </div>
 
 <script>
   let indice = 0;
-  const canciones = document.querySelectorAll('.cancion');
-  const audios = document.querySelectorAll('audio');
+  const canciones = document.querySelectorAll('audio');
+  const reproductor = document.getElementById('reproductor');
+  const vinilo = document.querySelector('.vinilo');
 
   function cambiarCancion(direccion) {
-    // Detener cualquier audio en reproducción
-    audios.forEach(a => {
-      a.pause();
-      a.currentTime = 0;
-      a.parentElement.querySelector('.vinilo').classList.remove('playing');
-    });
+    canciones[indice].pause();
+    canciones[indice].currentTime = 0;
+    vinilo.classList.remove('playing');
 
-    canciones[indice].classList.remove('active');
     indice = (indice + direccion + canciones.length) % canciones.length;
-    canciones[indice].classList.add('active');
   }
 
-  function togglePlay(vinilo) {
-    const audio = vinilo.parentElement.querySelector('audio');
+  function togglePlay() {
+    const audio = canciones[indice];
 
-    // Detener otros audios
-    audios.forEach(a => {
+    canciones.forEach(a => {
       if (a !== audio) {
         a.pause();
         a.currentTime = 0;
-        a.parentElement.querySelector('.vinilo').classList.remove('playing');
       }
     });
 
     if (audio.paused) {
       audio.play();
       vinilo.classList.add('playing');
+      reproductor.classList.add('flotando');
     } else {
       audio.pause();
       vinilo.classList.remove('playing');
+      reproductor.classList.remove('flotando');
     }
   }
 </script>
